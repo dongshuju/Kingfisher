@@ -251,3 +251,19 @@ extension SessionDelegate: URLSessionDataDelegate {
         sessionTask.onTaskDone.call((result, sessionTask.callbacks))
     }
 }
+
+extension SessionDelegate: URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+        if let monitor = KinfisherEventMonitor.urlSessionDidFinishCollecting {
+            monitor(session, task, metrics)
+        }
+    }
+}
+
+open class KinfisherEventMonitor {
+    /*
+    * Sent when complete statistics information has been collected for the task.
+    * Can do some monitor from here
+    */
+    public static var urlSessionDidFinishCollecting: ((URLSession, URLSessionTask, URLSessionTaskMetrics) -> Void)?
+}
